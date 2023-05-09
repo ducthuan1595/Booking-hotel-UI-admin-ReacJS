@@ -1,0 +1,26 @@
+.sidebar {
+  max-width: 200px;
+  margin-top: 20px;
+  /* border-right: 1px solid #333; */
+}
+
+.icon {
+  color: #6541ff;
+  margin-right: 5px;
+}
+
+.items {
+  margin-bottom: 20px;
+}
+
+.item {
+  margin: 10px 0 10px 10px;
+  text-decoration: none;
+  color: #333;
+  display: block;
+}
+
+.logout {
+  border: none;
+  cursor: pointer;
+}
