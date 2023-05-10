@@ -4,43 +4,44 @@ import { request } from "../service";
 
 import styled from "./AddHotelPage.module.css";
 import { useEffect, useState, useLayoutEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 const AddRoomPage = () => {
   const { params } = useParams();
-  const [isLoading, setIsLoading] = useState(false);
-  const [infoRoom, setInfoRoom] = useState();
-
-  useLayoutEffect (() => {
-    const getInfoRoom = async() => {
-      try{
-        const res = await request.getEditRoom(params);
-        if(res.data.message === 'ok') {
-          setInfoRoom(res.data.room);
-        }
-      }
-      catch(err) {
-        console.error(err);
-      }finally{
-        setIsLoading(false);
-      }
-    };
-    getInfoRoom();
-  }, [])
-  console.log(infoRoom);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [infoRoom, setInfoRoom] = useState(
+    params !== "add-room" ? location.state.room : ""
+  );
+  // useLayoutEffect (() => {
+  //   const getInfoRoom = async() => {
+  //     try{
+  //       const res = await request.getEditRoom(params);
+  //       if(res.data.message === 'ok') {
+  //         console.log('data', res.data);
+  //         setInfoRoom(res.data.room);
+  //       }
+  //     }
+  //     catch(err) {
+  //       console.error(err);
+  //     }finally{
+  //       setIsLoading(false);
+  //     }
+  //   };
+  //   getInfoRoom();
+  // }, [])
 
   // setIsLoading(false);
-  const [roomNumber, setRoomNumber] = useState([]);
+  const [roomNumber, setRoomNumber] = useState(
+    params !== "add-room" ? infoRoom.roomNumbers : []
+  );
   const [isValid, setIsValid] = useState("");
   const [valueInput, setValueInput] = useState({
-    title: infoRoom ? infoRoom.title : '',
-    maxPeople: '',
-    desc: '',
-    price: '',
+    title: params !== "add-room" ? infoRoom.title : "",
+    maxPeople: params !== "add-room" ? infoRoom.maxPeople : "",
+    desc: params !== "add-room" ? infoRoom.desc : "",
+    price: params !== "add-room" ? infoRoom.price : "",
   });
-
-  const navigate = useNavigate();
-
 
   const handleChangeInput = (e, name) => {
     const cpState = { ...valueInput };
@@ -49,7 +50,7 @@ const AddRoomPage = () => {
   };
 
   const handleRoomNumber = (e) => {
-    const arr = e.target.value.split(',');
+    const arr = e.target.value.split(",");
     setRoomNumber(arr);
   };
 
@@ -76,6 +77,11 @@ const AddRoomPage = () => {
         roomNumbers: roomNumber,
         // hotelId: roomsValue
       };
+      if (params !== "add-room") {
+        const roomId = infoRoom._id;
+        await request.postEditRoom({ ...addRoom, roomId });
+        return navigate("/room");
+      }
       await request.postAddRoom({ ...addRoom });
       navigate("/room");
     } catch (err) {
@@ -86,72 +92,78 @@ const AddRoomPage = () => {
 
   // console.log(isLoading);
   // console.log('info', infoRoom);
-  console.log('value-input', valueInput);
-  if(!isLoading) {
-    return (
-      <div>
-        <Navbar />
-        <div className={styled.dashboard}>
-          <SideBar />
-          <div className={styled.container}>
-            <h3 className={styled.title}>{params === 'add-room' ? 'Add New Room' : 'Edit Room'}</h3>
-            <div className={styled.content}>
-              <div className={styled["add-info"]}>
-                <div className={styled.left}>
-                  <div className={styled["form-group"]}>
-                    <label>Title</label>
-                    <input
-                      type="text"
-                      value={valueInput.title}
-                      name="title"
-                      placeholder="Kingdom bed"
-                      onChange={(e) => handleChangeInput(e, "title")}
-                    />
-                  </div>
-                  <div className={styled["form-group"]}>
-                    <label>Price</label>
-                    <input
-                      type="number"
-                      value={valueInput.price}
-                      name="price"
-                      placeholder="100"
-                      onChange={(e) => handleChangeInput(e, "price")}
-                    />
-                  </div>
-                  <div className={styled["form-group"]}>
-                    <label>Room number</label>
-                    <input
-                      type="text"
-                      value={roomNumber}
-                      placeholder="101, 202, 203, ..."
-                      name="roomNumber"
-                      onChange={handleRoomNumber}
-                    />
-                  </div>
+  console.log("value-input", valueInput);
+  // if(isLoading){
+  //   return (
+  //     <div>Loading...</div>
+  //   )
+  // }
+  return (
+    <div>
+      <Navbar />
+      <div className={styled.dashboard}>
+        <SideBar />
+        <div className={styled.container}>
+          <h3 className={styled.title}>
+            {params !== "add-room" ? "Edit Room" : "Add New Room"}
+          </h3>
+          <div className={styled.content}>
+            <div className={styled["add-info"]}>
+              <div className={styled.left}>
+                <div className={styled["form-group"]}>
+                  <label>Title</label>
+                  <input
+                    type="text"
+                    value={valueInput.title}
+                    name="title"
+                    placeholder="Kingdom bed"
+                    onChange={(e) => handleChangeInput(e, "title")}
+                  />
                 </div>
-  
-                <div className={styled.right}>
-                  <div className={styled["form-group"]}>
-                    <label>Description</label>
-                    <input
-                      type="text"
-                      value={valueInput.desc}
-                      name="desc"
-                      placeholder="That's great!"
-                      onChange={(e) => handleChangeInput(e, "desc")}
-                    />
-                  </div>
-                  <div className={styled["form-group"]}>
-                    <label>MaxPeople</label>
-                    <input
-                      type="text"
-                      value={valueInput.maxPeople}
-                      name="maxPeople"
-                      placeholder="2"
-                      onChange={(e) => handleChangeInput(e, "maxPeople")}
-                    />
-                  </div>
-                  {/* <div className={styled["form-group"]}>
+                <div className={styled["form-group"]}>
+                  <label>Price</label>
+                  <input
+                    type="number"
+                    value={valueInput.price}
+                    name="price"
+                    placeholder="100"
+                    onChange={(e) => handleChangeInput(e, "price")}
+                  />
+                </div>
+                <div className={styled["form-group"]}>
+                  <label>Room number</label>
+                  <input
+                    type="text"
+                    value={roomNumber}
+                    placeholder="101, 202, 203, ..."
+                    name="roomNumber"
+                    onChange={handleRoomNumber}
+                  />
+                </div>
+              </div>
+
+              <div className={styled.right}>
+                <div className={styled["form-group"]}>
+                  <label>Description</label>
+                  <input
+                    type="text"
+                    value={valueInput.desc}
+                    name="desc"
+                    placeholder="That's great!"
+                    onChange={(e) => handleChangeInput(e, "desc")}
+                  />
+                </div>
+                <div className={styled["form-group"]}>
+                  <label>MaxPeople</label>
+                  <input
+                    type="text"
+                    value={valueInput.maxPeople}
+                    name="maxPeople"
+                    placeholder="2"
+                    onChange={(e) => handleChangeInput(e, "maxPeople")}
+                  />
+                </div>
+                {/* <div className={styled["form-group"]}>
                     <label>Choose Hotel</label>
                     <div className={styled["select-room"]}>
                       {hotels &&
@@ -170,27 +182,22 @@ const AddRoomPage = () => {
                         })}
                     </div>
                   </div> */}
-                </div>
               </div>
-              
-              <div
-                style={{ color: "red", marginBottom: "5px", fontSize: "14px" }}
-              >
-                {isValid}
-              </div>
-              <button onClick={handleSave} className="btn btn-large btn-action">
-                {params === 'add-room' ? 'Save' : 'Edit'}
-              </button>
             </div>
+
+            <div
+              style={{ color: "red", marginBottom: "5px", fontSize: "14px" }}
+            >
+              {isValid}
+            </div>
+            <button onClick={handleSave} className="btn btn-large btn-action">
+              {params !== "add-room" ? "Edit" : "Save"}
+            </button>
           </div>
         </div>
       </div>
-    );
-  }else {
-    return (
-      <div>Loading...</div>
-    )
-  }
+    </div>
+  );
 };
 
 export default AddRoomPage;

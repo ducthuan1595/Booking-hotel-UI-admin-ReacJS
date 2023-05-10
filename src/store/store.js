@@ -4,7 +4,7 @@ import { useState } from "react";
 export const context = createContext();
 
 const Provider = ({ children }) => {
-  const [admin, setAdmin] = useState(null)
+  const [admin, setAdmin] = useState([])
   console.log(admin);
   useEffect(() => {
     const useCrr = JSON.parse(localStorage.getItem('admin')) ?? [];

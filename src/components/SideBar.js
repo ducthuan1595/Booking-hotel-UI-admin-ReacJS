@@ -36,7 +36,7 @@ const SideBar = () => {
         </div>
         <div className={styled.items}>
           <div>Lists</div>
-          <Link to='/dashboard' className={styled.item}>
+          <Link to='/' className={styled.item}>
             <FontAwesomeIcon icon={faUser} className={styled.icon} />
             <span>Users</span>
           </Link>
@@ -48,7 +48,7 @@ const SideBar = () => {
             <FontAwesomeIcon icon={faBed} className={styled.icon} />
             <span>Room</span>
           </Link>
-          <Link to='/transaction' className={styled.item}>
+          <Link to='/transactions' className={styled.item}>
             <FontAwesomeIcon
               icon={faMoneyBillTransfer}
               className={styled.icon}

@@ -55,6 +55,7 @@ const Form = () => {
           if(data.data.message === 'ok') {
             console.log(data.data.user);
             setAdmin(data.data.user);
+            console.log('login', data.data.user);
             localStorage.setItem('admin', JSON.stringify(data.data.user));
             navigate('/dashboard');
           }

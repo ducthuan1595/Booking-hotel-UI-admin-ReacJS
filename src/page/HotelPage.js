@@ -45,9 +45,16 @@ const HotelPage = () => {
     getHotel();
   }, [])
 
-  const handleEdit = (id) => [
-
-  ]
+  const handleEdit = async(id) => {
+    try{
+      const res = await request.getEditHotel(id);
+      if(res.data.message === 'ok') {
+        navigate(`/hotel/form/${id}`, {state: { hotel: res.data.hotel }});
+      }
+    }catch(err) {
+      console.error(err);
+    }
+  };
 
   return (
     <div>
@@ -83,7 +90,7 @@ const HotelPage = () => {
                         <td>{item.type}</td>
                         <td>{item.title}</td>
                         <td>{item.city}</td>
-                        <td>
+                        <td style={{width: '100px'}}>
                           <button onClick={handleEdit.bind(null, item._id)} className='btn btn-edit'>Edit</button>
                           <button onClick={handleDelete.bind(null, item._id)} className='btn btn-destroy'>Delete</button>       
                         </td>

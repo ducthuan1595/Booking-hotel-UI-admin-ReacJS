@@ -4,32 +4,36 @@ import { request } from "../service";
 
 import styled from "./AddHotelPage.module.css";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 const AddHotelPage = () => {
+  const {params} = useParams();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const [infoHotel, setInfoHotel] = useState(
+    params !== "add-hotel" ? location.state.hotel : ""
+  );
   const [rooms, setRooms] = useState();
   const [featureValue, setFeatureValue] = useState(1);
   const [roomsValue, setRoomsValue] = useState([]);
-  const [isValid, setIsValid] = useState('');
+  const [isValid, setIsValid] = useState("");
   const [valueInput, setValueInput] = useState({
-    name: "",
-    city: "",
-    address: "",
-    image: "",
-    title: "",
-    type: "",
-    desc: "",
-    distance: "",
-    price: "",
+    name: params !== "add-hotel" ? infoHotel.name : "",
+    city: params !== "add-hotel" ? infoHotel.city : "",
+    address: params !== "add-hotel" ? infoHotel.address : "",
+    image: params !== "add-hotel" ? infoHotel.photos : "",
+    title: params !== "add-hotel" ? infoHotel.title : "",
+    type: params !== "add-hotel" ? infoHotel.type : "",
+    desc: params !== "add-hotel" ? infoHotel.desc : "",
+    distance: params !== "add-hotel" ? infoHotel.distance : "",
+    price: params !== "add-hotel" ? infoHotel.price : "",
   });
-
-  const navigate = useNavigate();
 
   useEffect(() => {
     const allRooms = async () => {
       const res = await request.getAllRoom();
       if (res.data.message === "ok") {
-        console.log("rooms", res.data);
         setRooms(res.data.rooms);
       }
     };
@@ -60,7 +64,8 @@ const AddHotelPage = () => {
 
   const handleSave = async () => {
     try {
-      setIsValid('')
+      if(roomsValue.length === 0) return setIsValid("Please, choose rooms before registration.");
+      setIsValid("");
       const addHotel = {
         name: valueInput.name,
         city: valueInput.city,
@@ -74,21 +79,29 @@ const AddHotelPage = () => {
         featured: featureValue,
         title: valueInput.title,
       };
-      await request.postAddHotel({...addHotel});
-      navigate('/hotel');
+      if (params === "add-hotel") {
+        await request.postAddHotel({ ...addHotel });
+        return navigate("/hotel");
+      }
+      const hotelId = location.state.hotel._id;
+      await request.postEditHotel({ ...addHotel, hotelId });
+      navigate("/hotel");
     } catch (err) {
       console.log(err);
-      setIsValid('Please, complete procedure before registration.')
+      setIsValid("Please, complete procedure before registration.");
     }
   };
 
+  console.log("infor", infoHotel);
   return (
     <div>
       <Navbar />
       <div className={styled.dashboard}>
         <SideBar />
         <div className={styled.container}>
-          <h3 className={styled.title}>Add New Hotel</h3>
+          <h3 className={styled.title}>
+            {params === "add-hotel" ? "Add new hotel" : "Edit hotel"}
+          </h3>
           <div className={styled.content}>
             <div className={styled["add-info"]}>
               <div className={styled.left}>
@@ -178,7 +191,7 @@ const AddHotelPage = () => {
                 <div className={styled["form-group"]}>
                   <label>Price</label>
                   <input
-                    type="text"
+                    type="number"
                     value={valueInput.price}
                     name="price"
                     placeholder="100"
@@ -204,6 +217,7 @@ const AddHotelPage = () => {
                         <input
                           id={room._id}
                           type="checkbox"
+                          value={roomsValue}
                           onClick={(e) => handleSelectRoom(e, room._id)}
                         />
                         <label htmlFor={room._id}>{room.title}</label>
@@ -212,9 +226,13 @@ const AddHotelPage = () => {
                   })}
               </div>
             </div>
-            <div style={{color: 'red', marginBottom: '5px', fontSize: '14px'}}>{isValid}</div>
+            <div
+              style={{ color: "red", marginBottom: "5px", fontSize: "14px" }}
+            >
+              {isValid}
+            </div>
             <button onClick={handleSave} className="btn btn-large btn-action">
-              Save
+              {params === "add-hotel" ? "Save" : "Edit"}
             </button>
           </div>
         </div>
