@@ -11,17 +11,32 @@ class Request {
   getAllHotel() {
     return axios.get(`${url}/get-all-hotel`);
   };
-  postAddHotel({ ...addHotel }) {
-    return axios.post(`${url}admin/add-hotel`, {...addHotel})
+  postAddHotel({...addHotel}) {
+    return axios.post(`${url}/admin/add-hotel`, {...addHotel})
+  };
+  getEditHotel(hotelId) {
+    return axios.get(`${url}/admin/get-edit-hotel/${hotelId}`)
   };
   postEditHotel({ ...editHotel }) {
     return axios.post(`${url}/admin/edit-hotel`, {...editHotel})
-  }
+  };
   deleteHotel(hotelId) {
     return axios.post(`${url}/admin/delete-hotel`, {hotelId});
   };
   getAllRoom() {
     return axios.get(`${url}/admin/get-all-room`);
+  };
+  postAddRoom({...addRoom}) {
+    return axios.post(`${url}/admin/add-room`, {...addRoom});
+  };
+  getEditRoom(roomId) {
+    return axios.get(`${url}/admin/get-edit-room/${roomId}`);
+  }
+  postEditRoom({...editRoom}) {
+    return axios.post(`${url}/admin/edit-room`, {...editRoom});
+  };
+  deleteRoom(roomId) {
+    return axios.post(`${url}/admin/delete-room`, {roomId});
   }
 }
 

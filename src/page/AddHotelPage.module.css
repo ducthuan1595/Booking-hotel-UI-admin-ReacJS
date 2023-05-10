@@ -61,7 +61,12 @@
 .select-room {
   height: 80px;
   width: 100%;
+  margin-top: 10px;
   overflow: auto;
   scroll-behavior: auto;
   border: 1px solid #adacac;
+}
+
+.checkbox {
+  width: 5% !important;
 }

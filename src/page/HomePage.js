@@ -38,14 +38,11 @@ const HomePage = () => {
       const users = transactions.map(item => item.userId);
       const userId = users.map(user => user._id);
       let lgUser = 1;
-      for(let i = 0; i < userId.length; i++) {
-        for(let j = i+1; j < userId.length; j++) {
-          if(userId[i] === userId[j]) {
-            lgUser = lgUser + 1;
-          }
-        }
+      for(let i = 1; i < userId.length; i++) {
+        let j = 0;
+        for(j = 0; j < i; j++) if(userId[i] === userId[j]) break;
+        if(i === j) lgUser++;
       }
-      console.log('ok');
       setAccounts(lgUser)
     }, [transactions])
 

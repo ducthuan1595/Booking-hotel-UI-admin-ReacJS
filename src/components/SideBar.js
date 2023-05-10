@@ -58,11 +58,11 @@ const SideBar = () => {
         </div>
         <div className={styled.items}>
           <div>New</div>
-          <Link to='/add-hotel' className={styled.item}>
+          <Link to='/hotel/form/add-hotel' className={styled.item}>
             <FontAwesomeIcon icon={faHotel} className={styled.icon} />
             <span>New Hotel</span>
           </Link>
-          <Link to='/add-room' className={styled.item}>
+          <Link to='/room/form/add-room' className={styled.item}>
             <FontAwesomeIcon icon={faBed} className={styled.icon} />
             <span>New Room</span>
           </Link>

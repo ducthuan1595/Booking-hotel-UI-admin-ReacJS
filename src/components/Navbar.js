@@ -1,10 +1,10 @@
 import styled from './Navbar.module.css';
+import React from 'react';
 import { context } from '../store/store';
 import { useContext } from 'react';
 
 const Navbar = () => {
   const { admin } = useContext(context);
-  console.log(admin);
   return (
     <div>
       <div className='navbar'>
@@ -16,4 +16,4 @@ const Navbar = () => {
   )
 }
 
-export default Navbar;
+export default React.memo(Navbar);
