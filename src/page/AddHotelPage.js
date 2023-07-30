@@ -92,7 +92,6 @@ const AddHotelPage = () => {
     }
   };
 
-  console.log("infor", infoHotel);
   return (
     <div>
       <Navbar />

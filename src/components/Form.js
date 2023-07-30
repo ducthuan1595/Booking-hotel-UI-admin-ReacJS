@@ -87,7 +87,7 @@ const Form = () => {
           </div>
           <div className={styled.group}>
             <input
-              type="pass"
+              type="password"
               name="password"
               value={password}
               // style={{ borderColor: checkPassword ? '#ea4a4a' : ''}}

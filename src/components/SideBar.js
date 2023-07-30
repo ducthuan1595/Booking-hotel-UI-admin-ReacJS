@@ -19,7 +19,7 @@ const SideBar = () => {
   const navigate = useNavigate();
   
   const handleLogout = () => {
-    setAdmin(null);
+    setAdmin([]);
     localStorage.removeItem('admin');
     navigate('/');
   }
@@ -36,7 +36,7 @@ const SideBar = () => {
         </div>
         <div className={styled.items}>
           <div>Lists</div>
-          <Link to='/' className={styled.item}>
+          <Link to='/dashboard' className={styled.item}>
             <FontAwesomeIcon icon={faUser} className={styled.icon} />
             <span>Users</span>
           </Link>

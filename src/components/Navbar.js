@@ -9,7 +9,7 @@ const Navbar = () => {
     <div>
       <div className='navbar'>
         <h3 className='title'>Admin Page</h3>
-        <div>{admin.length ? admin[0].email : ''}</div>
+        <div>{admin.length ? admin[0]?.email : ''}</div>
       </div>
       <hr></hr>
     </div>

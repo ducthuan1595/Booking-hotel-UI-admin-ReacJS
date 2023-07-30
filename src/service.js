@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const url = 'http://localhost:5000';
+const url = process.env.REACT_APP_API_URL;
 class Request {
   signIn(email, password) {
     return axios.post(`${url}/admin/sign-in`, {email, password});
